@@ -1,5 +1,6 @@
 pub mod block;
 pub mod blockchain;
+pub mod pow;
 
 use hex;
 
@@ -16,6 +17,10 @@ fn main() {
             String::from_utf8(block.data().to_vec()).unwrap()
         );
         println!("Hash: {:?}", hex::encode(&block.hash()));
+
+        let pow = pow::ProofOfWork::new(&block, 8);
+        println!("PoW: {}", pow.validate());
+
         println!();
     }
 }
