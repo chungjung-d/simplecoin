@@ -1,6 +1,8 @@
 use crate::pow::ProofOfWork;
 use chrono::prelude::*;
+use serde::{Deserialize, Serialize};
 
+#[derive(Serialize, Deserialize)]
 pub struct Block {
     timestamp: i64,
     data: Vec<u8>,
@@ -25,6 +27,14 @@ impl Block {
         block.hash = hash;
         block.nonce = nonce;
         block
+    }
+
+    pub fn serialize(&self) -> Vec<u8> {
+        serde_json::to_vec(self).expect("Failed to serialize data")
+    }
+
+    pub fn deserialize(d: &[u8]) -> Block {
+        serde_json::from_slice(d).expect("Failed to deserialize data")
     }
 
     pub fn hash(&self) -> &[u8] {

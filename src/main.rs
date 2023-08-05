@@ -10,17 +10,23 @@ fn main() {
     bc.add_block("Send 1 BTC to Ivan");
     bc.add_block("Send 2 more BTC to Ivan");
 
-    for block in bc.blocks() {
-        println!("Prev. hash: {:?}", hex::encode(&block.prev_block_hash()));
-        println!(
-            "Data: {}",
-            String::from_utf8(block.data().to_vec()).unwrap()
-        );
-        println!("Hash: {:?}", hex::encode(&block.hash()));
+    let mut iterator = bc.iterator();
+    loop {
+        match iterator.next() {
+            Some(block) => {
+                println!("Prev. hash: {}", hex::encode(block.prev_block_hash()));
+                println!(
+                    "Data: {}",
+                    String::from_utf8(block.data().to_vec()).unwrap()
+                );
+                println!("Hash: {}", hex::encode(block.hash()));
 
-        let pow = pow::ProofOfWork::new(&block, 8);
-        println!("PoW: {}", pow.validate());
+                let pow = pow::ProofOfWork::new(&block, 8);
+                println!("PoW: {}", pow.validate());
 
-        println!();
+                println!("");
+            }
+            None => break,
+        }
     }
 }
